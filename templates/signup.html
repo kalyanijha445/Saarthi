@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Saarthi | Citizen & Govt Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --citizen-grad: linear-gradient(135deg, #138808 0%, #2ecc71 100%);
+            --gov-grad: linear-gradient(135deg, #FF9933 0%, #f39c12 100%);
+            --navy: #000080;
+            --glass: rgba(255, 255, 255, 0.95);
+            --border: #e2e8f0;
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            /* Subtle Mesh Background */
+            background-image: radial-gradient(circle at 10% 10%, rgba(255, 153, 51, 0.08), transparent 30%),
+                              radial-gradient(circle at 90% 90%, rgba(19, 136, 8, 0.08), transparent 30%);
+        }
+
+        .signup-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            border: 1px solid white;
+            text-align: center;
+        }
+
+        .logo-small { width: 80px; margin-bottom: 10px; }
+        h2 { color: var(--navy); font-weight: 800; font-size: 1.8rem; margin-bottom: 5px; }
+        p.subtitle { color: #64748b; font-size: 0.9rem; margin-bottom: 30px; }
+
+        /* Role Switcher */
+        .role-selector {
+            display: flex;
+            background: #eef2f6;
+            border-radius: 14px;
+            padding: 5px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: none;
+            font-weight: 700;
+            color: #94a3b8;
+            z-index: 1;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .toggle-btn.active { color: white; }
+        #btn-active {
+            position: absolute;
+            top: 5px; left: 5px;
+            width: calc(50% - 5px);
+            height: calc(100% - 10px);
+            background: var(--citizen-grad);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        /* Grid System */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            text-align: left;
+        }
+        .full-width { grid-column: span 2; }
+
+        .form-group { display: flex; flex-direction: column; }
+        label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 8px;
+            margin-left: 4px;
+            text-align: center; /* Aligned as per screenshot */
+        }
+        
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-wrapper i.left-icon { position: absolute; left: 16px; color: #94a3b8; font-size: 1rem; }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px 45px 12px 45px; /* Added padding for icons on both sides */
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            background: #fdfdfd;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        /* Password Eye Icon */
+        .pass-toggle {
+            position: absolute;
+            right: 15px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: 0.2s;
+        }
+        .pass-toggle:hover { color: var(--navy); }
+
+        /* Focus Effects */
+        .input-field:focus { border-color: #2ecc71; box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1); }
+
+        /* Sections */
+        .form-section { display: contents; }
+        .hidden { display: none; }
+
+        /* Submit Button */
+        #submit-btn {
+            grid-column: span 2;
+            width: 100%;
+            padding: 16px;
+            background: var(--citizen-grad);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: var(--transition);
+            box-shadow: 0 10px 20px rgba(19, 136, 8, 0.1);
+        }
+        #submit-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        /* GOV THEME MODS */
+        .gov-mode #btn-active { left: 50%; background: var(--gov-grad); }
+        .gov-mode .input-field:focus { border-color: #f39c12; box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.1); }
+        .gov-mode #submit-btn { background: var(--gov-grad); box-shadow: 0 10px 20px rgba(243, 156, 18, 0.1); }
+
+        .footer { grid-column: span 2; margin-top: 25px; font-size: 0.9rem; color: #64748b; text-align: center; }
+        .footer a { color: #138808; text-decoration: none; font-weight: 700; }
+        .gov-mode .footer a { color: #FF9933; }
+    </style>
+</head>
+<body id="mainBody">
+
+   <div class="signup-card" id="signupCard">
+    <!-- ADDED: Flash Messages for Success/Error feedback -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div style="color: #138808; background: #e9f7ef; padding: 10px; border-radius: 10px; margin-bottom: 15px; font-size: 14px; font-weight: 600; border: 1px solid #d4efdf;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <img src="{{ url_for('static', filename='logo1.png') }}" alt="Saarthi" class="logo-small" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2830/2830305.png'">
+    <h2>Join Saarthi</h2>
+    <p class="subtitle">Smart Governance & Public Safety Portal</p>
+
+    <!-- Role Toggle -->
+    <div class="role-selector">
+        <div id="btn-active"></div>
+        <button class="toggle-btn active" id="userTab" onclick="switchRole('user')">Citizen</button>
+        <button class="toggle-btn" id="govTab" onclick="switchRole('gov')">Government</button>
+    </div>
+
+    <form action="/signup" method="POST" class="form-grid" id="signup-form">
+        <!-- CRITICAL: Hidden role for app.py -->
+        <input type="hidden" name="role" id="role-input" value="user">
+
+        <!-- Citizen Section -->
+        <div id="citizen-fields" class="form-section">
+            <div class="form-group">
+                <label>Full Name</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user-pen left-icon"></i>
+                    <input type="text" name="fullname" id="cit-name" class="input-field" placeholder="Enter your full name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Mobile Number</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-phone left-icon"></i>
+                    <input type="tel" name="mobile" id="cit-mobile" class="input-field" placeholder="10-digit mobile number" maxlength="10" required>
+                </div>
+            </div>
+            <!-- Citizen Email -->
+            <div class="form-group full-width">
+                <label>Email Address</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-envelope left-icon"></i>
+                    <input type="email" name="email" id="cit-email" class="input-field" placeholder="personal@mail.com">
+                </div>
+            </div>
+        </div>
+
+        <!-- Gov Section -->
+        <div id="gov-fields" class="form-section hidden">
+            <div class="form-group">
+                <label>Full Name</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user-tie left-icon"></i>
+                    <!-- name="gov_name" matches app.py -->
+                    <input type="text" name="gov_name" id="gov-name" class="input-field" placeholder="Officer Name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Official ID Number</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-id-card left-icon"></i>
+                    <input type="text" name="gov_id" id="gov-id" class="input-field" placeholder="Ex: DEL-POL-12345">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Department</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-building left-icon"></i>
+                    <select name="dept" id="gov-dept" class="input-field">
+                        <option value="">Select Department</option>
+                        <option value="Delhi Police">Delhi Police</option>
+                        <option value="PWD / CPWD">PWD / CPWD</option>
+                        <option value="MCD Official">MCD Official</option>
+                        <option value="Ministerial Office">Ministerial Office</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Gov Email -->
+            <div class="form-group">
+                <label>Official Email</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-envelope-circle-check left-icon"></i>
+                    <!-- name="gov_email" matches app.py -->
+                    <input type="email" name="gov_email" id="gov-email" class="input-field" placeholder="officer@delhi.gov.in">
+                </div>
+            </div>
+        </div>
+
+        <!-- Passwords (Common for both) -->
+        <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-lock left-icon"></i>
+                <input type="password" id="pass" name="password" class="input-field" placeholder="••••••••" required>
+                <i class="fa-solid fa-eye pass-toggle" onclick="togglePass('pass', this)"></i>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Confirm Password</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-circle-check left-icon"></i>
+                <input type="password" id="confirm_pass" class="input-field" placeholder="••••••••" required>
+                <i class="fa-solid fa-eye pass-toggle" onclick="togglePass('confirm_pass', this)"></i>
+            </div>
+        </div>
+
+        <button type="submit" id="submit-btn">Register to Saarthi</button>
+
+        <div class="footer">
+            Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function switchRole(role) {
+        const card = document.querySelector('.signup-card');
+        const roleInput = document.getElementById('role-input');
+        const cFields = document.getElementById('citizen-fields');
+        const gFields = document.getElementById('gov-fields');
+        const uTab = document.getElementById('userTab');
+        const gTab = document.getElementById('govTab');
+
+        // Input References for required toggling
+        const citInputs = [document.getElementById('cit-name'), document.getElementById('cit-mobile')];
+        const govInputs = [document.getElementById('gov-name'), document.getElementById('gov-id'), document.getElementById('gov-dept'), document.getElementById('gov-email')];
+
+        if (role === 'gov') {
+            card.classList.add('gov-mode');
+            roleInput.value = 'gov';
+            gFields.classList.remove('hidden');
+            cFields.classList.add('hidden');
+            gTab.classList.add('active');
+            uTab.classList.remove('active');
+
+            // Set Gov fields required, Citizen not required
+            govInputs.forEach(el => el.required = true);
+            citInputs.forEach(el => el.required = false);
+        } else {
+            card.classList.remove('gov-mode');
+            roleInput.value = 'user';
+            cFields.classList.remove('hidden');
+            gFields.classList.add('hidden');
+            uTab.classList.add('active');
+            gTab.classList.remove('active');
+
+            // Set Citizen fields required, Gov not required
+            citInputs.forEach(el => el.required = true);
+            govInputs.forEach(el => el.required = false);
+        }
+    }
+
+    function togglePass(id, icon) {
+        const el = document.getElementById(id);
+        if (el.type === 'password') {
+            el.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            el.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+
+    // Password matching validation before submit
+    document.getElementById('signup-form').onsubmit = function() {
+        const p1 = document.getElementById('pass').value;
+        const p2 = document.getElementById('confirm_pass').value;
+        if(p1 !== p2) {
+            alert("Passwords do not match!");
+            return false;
+        }
+        return true;
+    };
+</script>
+</body>
+</html>

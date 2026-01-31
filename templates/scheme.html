@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Saarthi | Smart Scheme Explorer</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: { saffron: '#FF9933', navy: '#1a2a47', green: '#138808', soft: '#F1F5F9' },
+                    boxShadow: { 'glass': '0 10px 30px -5px rgba(0, 0, 0, 0.05)', 'saffron': '0 15px 30px -10px rgba(255, 153, 51, 0.4)' }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background: radial-gradient(circle at top right, #fff, #f1f5f9); min-height: 100vh; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.4); }
+        .story-bg { background: linear-gradient(135deg, #1a2a47 0%, #0f172a 100%); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .pill-active { background: #1a2a47; color: white; border-color: #1a2a47; box-shadow: 0 10px 20px rgba(26, 42, 71, 0.2); }
+        
+        @keyframes subtle-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        .ai-assist-bounce { animation: subtle-bounce 3s ease-in-out infinite; }
+        
+        .scheme-card:hover { transform: translateY(-8px); border-color: #FF9933; }
+    </style>
+</head>
+<body class="text-navy pb-24">
+
+    <!-- 1. RESPONSIVE TOP HEADER -->
+    <header class="fixed top-0 w-full z-[100] glass px-6 lg:px-12 py-4 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-6">
+            <a href="{{ url_for('dashboard') }}" class="flex items-center gap-2 bg-navy text-white px-5 py-2.5 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all">
+                <i class="fa-solid fa-house-chimney text-xs"></i>
+                <span class="text-xs font-extrabold uppercase tracking-widest hidden sm:block">Dashboard</span>
+            </a>
+            <div class="h-8 w-px bg-slate-200 hidden lg:block"></div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest hidden lg:block">System: <span class="text-green">Online</span></p>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="text-right hidden sm:block">
+                <p class="text-[9px] font-black text-slate-400 uppercase">Eligibility Match</p>
+                <p class="text-xs font-black text-green">88% Complete</p>
+            </div>
+            <button class="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-navy relative hover:shadow-lg transition-all">
+                <i class="fa-solid fa-heart"></i>
+                <span class="absolute -top-1 -right-1 w-5 h-5 bg-saffron text-white text-[10px] rounded-full flex items-center justify-center font-black border-2 border-white">3</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER (Increased Width) -->
+    <main class="max-w-7xl mx-auto pt-28 px-6 lg:px-12 space-y-12">
+
+        <!-- 2. HERO DISCOVERY -->
+        <section class="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div class="space-y-2">
+                <h1 class="text-4xl lg:text-5xl font-black tracking-tighter leading-none">Find Your Next<br><span class="text-saffron">Opportunity.</span></h1>
+                <p class="text-slate-400 font-bold text-sm lg:text-base">Explore AI-curated government schemes for your growth.</p>
+            </div>
+            <div class="relative w-full lg:max-w-md">
+                <input type="text" id="schemeSearch" onkeyup="searchSchemes()" placeholder="Search education, farming, business..." class="w-full h-16 pl-14 pr-6 bg-white rounded-3xl shadow-glass border-none focus:ring-2 focus:ring-saffron transition-all font-medium text-sm">
+                <i class="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-slate-300"></i>
+            </div>
+        </section>
+
+        <!-- 3. VOICES OF CHANGE (IMMERIVE WIDE CAROUSEL) -->
+        <section class="space-y-6">
+            <div class="flex items-center justify-between">
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Voices of Change (Positive Leadership)</h3>
+                <div class="flex gap-2">
+                    <button class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
+                    <button class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+                </div>
+            </div>
+
+            <div class="flex gap-6 overflow-x-auto hide-scrollbar snap-x py-2">
+                <!-- Story 1: Leadership Example -->
+                <div class="snap-center min-w-[320px] lg:min-w-[450px] story-bg rounded-[3rem] p-10 text-white relative overflow-hidden group">
+                    <div class="absolute -right-12 -top-12 w-48 h-48 bg-saffron opacity-10 rounded-full group-hover:scale-110 transition-transform"></div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <img src="https://i.pravatar.cc/100?u=women1" class="w-14 h-14 rounded-2xl border-2 border-saffron object-cover">
+                        <div>
+                            <p class="text-[10px] font-black text-saffron uppercase">Community Leader</p>
+                            <h4 class="text-lg font-bold">Laxmi S., Jharkhand</h4>
+                        </div>
+                    </div>
+                    <p class="text-sm lg:text-base leading-relaxed font-medium opacity-80 italic">
+                        "Through the <span class="text-saffron">Skill India Subsidy</span>, I opened a digital training hub in my village. We have now trained 150 girls in coding, making our district a tech-pioneer."
+                    </p>
+                    <div class="mt-8 flex items-center justify-between">
+                        <span class="text-[10px] font-black bg-white/10 px-4 py-2 rounded-xl">#Empowerment</span>
+                        <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-saffron transition-colors cursor-pointer">
+                            <i class="fa-solid fa-play text-[10px]"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story 2: Public Service -->
+                <div class="snap-center min-w-[320px] lg:min-w-[450px] bg-green rounded-[3rem] p-10 text-white relative overflow-hidden group">
+                    <div class="absolute -right-12 -top-12 w-48 h-48 bg-white/10 rounded-full group-hover:scale-110 transition-transform"></div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <img src="https://i.pravatar.cc/100?u=farmer2" class="w-14 h-14 rounded-2xl border-2 border-white/40 object-cover">
+                        <div>
+                            <p class="text-[10px] font-black text-white/70 uppercase">Innovation in Farming</p>
+                            <h4 class="text-lg font-bold">Vijay K., Punjab</h4>
+                        </div>
+                    </div>
+                    <p class="text-sm lg:text-base leading-relaxed font-medium opacity-80 italic">
+                        "The <span class="font-bold">Agri-Drone Pilot Scheme</span> allowed our cooperative to reduce pesticide usage by 70%. We are now exporting organic produce globally."
+                    </p>
+                    <div class="mt-8 flex items-center justify-between">
+                        <span class="text-[10px] font-black bg-white/10 px-4 py-2 rounded-xl">#GreenRevolution</span>
+                        <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white hover:text-green transition-colors cursor-pointer">
+                            <i class="fa-solid fa-play text-[10px]"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. CATEGORIES & GRID -->
+        <section class="space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="flex gap-2 overflow-x-auto hide-scrollbar">
+                    <button onclick="filterSchemes('All', this)" class="pill-active shrink-0 px-8 py-3.5 bg-white border border-slate-200 rounded-2xl text-xs font-black transition-all">All Schemes</button>
+                    <button onclick="filterSchemes('Education', this)" class="shrink-0 px-8 py-3.5 bg-white border border-slate-200 rounded-2xl text-xs font-black transition-all">Education</button>
+                    <button onclick="filterSchemes('Health', this)" class="shrink-0 px-8 py-3.5 bg-white border border-slate-200 rounded-2xl text-xs font-black transition-all">Health</button>
+                    <button onclick="filterSchemes('Finance', this)" class="shrink-0 px-8 py-3.5 bg-white border border-slate-200 rounded-2xl text-xs font-black transition-all">Finance</button>
+                    <button onclick="filterSchemes('Startup', this)" class="shrink-0 px-8 py-3.5 bg-white border border-slate-200 rounded-2xl text-xs font-black transition-all">Startup</button>
+                </div>
+                <p class="text-xs font-bold text-slate-400">Showing <span class="text-navy" id="schemeCount">12</span> results</p>
+            </div>
+
+            <!-- SCHEME GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="schemeContainer">
+                
+                <!-- Card 1 -->
+                <div class="scheme-card glass p-8 rounded-[2.5rem] flex flex-col justify-between border-2 border-transparent transition-all cursor-pointer group" data-category="Education">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="w-14 h-14 bg-saffron/10 text-saffron rounded-2xl flex items-center justify-center text-2xl shadow-inner"><i class="fa-solid fa-user-graduate"></i></div>
+                            <span class="text-[10px] font-black bg-green/10 text-green px-3 py-1 rounded-full">94% MATCH</span>
+                        </div>
+                        <h4 class="text-xl font-extrabold text-navy group-hover:text-saffron transition-colors">PM Vidya Scholarship</h4>
+                        <p class="text-xs font-medium text-slate-500 mt-2 leading-relaxed">Financial assistance for students pursuing higher education in technical fields.</p>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Education</span>
+                        <div class="w-10 h-10 rounded-full bg-navy text-white flex items-center justify-center group-hover:translate-x-1 transition-transform"><i class="fa-solid fa-arrow-right text-[10px]"></i></div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="scheme-card glass p-8 rounded-[2.5rem] flex flex-col justify-between border-2 border-transparent transition-all cursor-pointer group" data-category="Startup">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="w-14 h-14 bg-navy/10 text-navy rounded-2xl flex items-center justify-center text-2xl shadow-inner"><i class="fa-solid fa-rocket"></i></div>
+                            <span class="text-[10px] font-black bg-green/10 text-green px-3 py-1 rounded-full">82% MATCH</span>
+                        </div>
+                        <h4 class="text-xl font-extrabold text-navy group-hover:text-saffron transition-colors">Standup India Fund</h4>
+                        <p class="text-xs font-medium text-slate-500 mt-2 leading-relaxed">Loans up to 1 Crore for SC/ST and women entrepreneurs for greenfield projects.</p>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Finance</span>
+                        <div class="w-10 h-10 rounded-full bg-navy text-white flex items-center justify-center group-hover:translate-x-1 transition-transform"><i class="fa-solid fa-arrow-right text-[10px]"></i></div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="scheme-card glass p-8 rounded-[2.5rem] flex flex-col justify-between border-2 border-transparent transition-all cursor-pointer group" data-category="Health">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="w-14 h-14 bg-green/10 text-green rounded-2xl flex items-center justify-center text-2xl shadow-inner"><i class="fa-solid fa-heart-pulse"></i></div>
+                            <span class="text-[10px] font-black bg-green/10 text-green px-3 py-1 rounded-full">MATCHED</span>
+                        </div>
+                        <h4 class="text-xl font-extrabold text-navy group-hover:text-saffron transition-colors">Ayushman Digital</h4>
+                        <p class="text-xs font-medium text-slate-500 mt-2 leading-relaxed">Digital health records and access to cashless treatment up to 5 Lakhs.</p>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Health</span>
+                        <div class="w-10 h-10 rounded-full bg-navy text-white flex items-center justify-center group-hover:translate-x-1 transition-transform"><i class="fa-solid fa-arrow-right text-[10px]"></i></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 6. FLOATING AI ELIGIBILITY ASSISTANT (WIDER PILL) -->
+    <div class="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-lg px-6 z-[100]">
+        <button class="w-full h-20 bg-navy text-white rounded-[2.5rem] shadow-2xl flex items-center justify-between px-8 group relative overflow-hidden ai-assist-bounce">
+            <div class="flex items-center gap-5">
+                <div class="relative w-12 h-12 bg-saffron rounded-full flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-robot text-lg"></i>
+                    <span class="absolute -top-1 -right-1 w-4 h-4 bg-green border-2 border-navy rounded-full"></span>
+                </div>
+                <div class="text-left">
+                    <p class="text-[10px] font-black text-saffron uppercase tracking-widest mb-0.5">Saarthi AI Assistant</p>
+                    <p class="text-sm font-extrabold">Check My Eligibility instantly</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-500 group-hover:translate-x-2 transition-transform"></i>
+            <!-- Shimmer -->
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000 transition-transform"></div>
+        </button>
+    </div>
+
+    <script>
+        // Search & Filter Logic
+        function searchSchemes() {
+            const input = document.getElementById('schemeSearch').value.toLowerCase();
+            const cards = document.querySelectorAll('.scheme-card');
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(input) ? 'flex' : 'none';
+            });
+        }
+
+        function filterSchemes(category, btn) {
+            document.querySelectorAll('button').forEach(b => b.classList.remove('pill-active'));
+            btn.classList.add('pill-active');
+
+            const cards = document.querySelectorAll('.scheme-card');
+            cards.forEach(card => {
+                if (category === 'All' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

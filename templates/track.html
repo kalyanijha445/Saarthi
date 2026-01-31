@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Saarthi | Live Track</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QR Code Library -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <!-- Lottie Player -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        saffron: '#FF9933',
+                        navy: '#1a2a47',
+                        green: '#138808',
+                        softBg: '#F0F4F8'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: var(--softBg); }
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Premium Scanner Glassmorphism */
+        .scanner-glass {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Laser Animation */
+        @keyframes scan {
+            0%, 100% { top: 5%; opacity: 0.5; }
+            50% { top: 90%; opacity: 1; }
+        }
+        .laser-line {
+            position: absolute; width: 100%; height: 3px;
+            background: linear-gradient(to right, transparent, #FF9933, transparent);
+            box-shadow: 0 0 15px #FF9933;
+            animation: scan 2s ease-in-out infinite;
+            z-index: 20;
+        }
+
+        .timeline-line {
+            position: absolute; left: 28px; top: 45px; bottom: 0; width: 3px; background: #e2e8f0; z-index: 0;
+            border-radius: 99px;
+        }
+        .timeline-progress {
+            position: absolute; left: 28px; top: 45px; width: 3px; height: 55%; 
+            background: linear-gradient(to bottom, #138808, #FF9933);
+            z-index: 1; border-radius: 99px;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+        }
+
+        ::-webkit-scrollbar { width: 0; }
+    </style>
+</head>
+<body class="text-slate-800 pb-32 relative overflow-x-hidden">
+
+    <!-- Ambient Background Blobs -->
+    <div class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden opacity-40">
+        <div class="absolute top-0 left-10 w-72 h-72 bg-orange-200 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-10 right-10 w-72 h-72 bg-blue-100 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- ================= HEADER ================= -->
+    <nav class="fixed top-0 w-full z-50 glass shadow-sm">
+        <div class="max-w-md mx-auto px-5 py-4 flex items-center justify-between">
+            <!-- Left: Dashboard Pill (Mobile Optimized) -->
+            <a href="{{ url_for('dashboard') }}" class="flex items-center gap-2 bg-white/80 border border-slate-200 px-4 py-2 rounded-2xl shadow-sm active:scale-95 transition-all group">
+                <i class="fa-solid fa-house-chimney text-saffron group-hover:scale-110 transition-transform"></i>
+                <span class="text-xs font-bold text-navy">Dashboard</span>
+            </a>
+            
+            <div class="text-center">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-[2px]">ORDER ID</p>
+                <h1 class="font-extrabold text-sm text-navy tracking-tight">#SRTH-8892</h1>
+            </div>
+
+            <button class="w-10 h-10 rounded-full bg-white/80 shadow-sm flex items-center justify-center text-slate-700">
+                <i class="fa-solid fa-share-nodes"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="max-w-md mx-auto pt-24 px-4 space-y-6">
+
+        <!-- 1. ESTIMATED TIME CARD -->
+        <div class="glass rounded-[2.5rem] p-7 shadow-xl relative overflow-hidden">
+            <div class="flex items-center justify-between relative z-10">
+                <div>
+                    <h2 class="text-4xl font-black text-navy tracking-tighter">2 Days</h2>
+                    <p class="text-sm font-bold text-slate-500">Estimated Completion</p>
+                </div>
+                <div class="w-20 h-20">
+                    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_p8bfn5to.json" background="transparent" speed="1" loop autoplay></lottie-player>
+                </div>
+            </div>
+            <div class="mt-4 bg-emerald-50 rounded-2xl p-3 flex items-center justify-between border border-emerald-100">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-green animate-ping"></div>
+                    <span class="text-xs font-bold text-green uppercase tracking-wide">On Schedule</span>
+                </div>
+                <span class="text-xs font-extrabold text-slate-400">Exp: 31 Jan</span>
+            </div>
+        </div>
+
+        <!-- 2. OFFICER CARD -->
+        <div class="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 overflow-hidden border border-slate-50">
+            <div class="h-24 bg-slate-50 relative flex items-center justify-center overflow-hidden">
+                <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#FF9933 1px, transparent 1px); background-size: 15px 15px;"></div>
+                <div class="w-16 h-16 rounded-2xl bg-white border-4 border-white shadow-2xl overflow-hidden z-10">
+                    <img src="https://i.pravatar.cc/150?u=gov" class="w-full h-full object-cover">
+                </div>
+            </div>
+            <div class="px-6 pb-6 pt-2 text-center relative">
+                <h3 class="text-xl font-bold text-navy leading-none">Rajesh Kumar</h3>
+                <p class="text-xs font-bold text-saffron mt-1">Sub-Divisional Officer (SDO)</p>
+                
+                <div class="flex gap-3 mt-5">
+                    <a href="#" class="flex-1 bg-emerald-50 text-green font-bold py-3 rounded-2xl text-xs flex items-center justify-center gap-2 hover:bg-emerald-100 transition-colors">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> Message
+                    </a>
+                    <button onclick="nudgeOfficer(this)" class="flex-1 bg-navy text-white font-bold py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-navy/20 active:scale-95 transition-all">
+                        Nudge 👋
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. LIVE TIMELINE -->
+        <div class="pl-2 relative">
+            <div class="timeline-line"></div>
+            <div class="timeline-progress"></div>
+
+            <!-- Step 1 (Completed) -->
+            <div class="flex gap-6 mb-10 relative z-10">
+                <div class="w-14 h-14 rounded-2xl bg-green text-white flex items-center justify-center shadow-lg shadow-green/20 border-4 border-white">
+                    <i class="fa-solid fa-check text-xl"></i>
+                </div>
+                <div class="pt-1">
+                    <h4 class="font-bold text-navy leading-tight">Application Submitted</h4>
+                    <p class="text-[11px] text-slate-400 font-bold uppercase mt-0.5">Jan 28 • 10:30 AM</p>
+                </div>
+            </div>
+
+            <!-- Step 2 (Active) -->
+            <div class="flex gap-6 mb-10 relative z-10">
+                <div class="relative w-14 h-14">
+                    <div class="absolute inset-0 bg-saffron rounded-2xl animate-ping opacity-20"></div>
+                    <div class="w-14 h-14 rounded-2xl bg-saffron text-white flex items-center justify-center shadow-lg shadow-saffron/30 border-4 border-white relative z-10">
+                        <i class="fa-solid fa-magnifying-glass text-xl"></i>
+                    </div>
+                </div>
+                <div class="pt-1">
+                    <h4 class="font-bold text-navy leading-tight">Under Review</h4>
+                    <p class="text-[11px] text-saffron font-black uppercase mt-0.5 tracking-wide">Processing at SDO Desk</p>
+                </div>
+            </div>
+
+            <!-- Step 3 (Pending) -->
+            <div class="flex gap-6 relative z-10 opacity-40">
+                <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center border-4 border-white">
+                    <i class="fa-solid fa-stamp text-xl"></i>
+                </div>
+                <div class="pt-1">
+                    <h4 class="font-bold text-slate-500 leading-tight">Approval</h4>
+                    <p class="text-[11px] text-slate-400 font-bold mt-0.5">Final Step</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. FEEDBACK SHEET -->
+        <div class="bg-white rounded-[2.5rem] shadow-xl p-8 text-center border border-slate-50">
+            <h3 class="font-extrabold text-xl text-navy mb-1">Rate the Experience</h3>
+            <p class="text-xs text-slate-400 mb-6">Your feedback helps us improve</p>
+            
+            <div class="flex justify-center gap-3 mb-8" id="stars">
+                <button onclick="rate(1)" class="text-3xl text-slate-200 transition-all hover:scale-125"><i class="fa-solid fa-star"></i></button>
+                <button onclick="rate(2)" class="text-3xl text-slate-200 transition-all hover:scale-125"><i class="fa-solid fa-star"></i></button>
+                <button onclick="rate(3)" class="text-3xl text-slate-200 transition-all hover:scale-125"><i class="fa-solid fa-star"></i></button>
+                <button onclick="rate(4)" class="text-3xl text-slate-200 transition-all hover:scale-125"><i class="fa-solid fa-star"></i></button>
+                <button onclick="rate(5)" class="text-3xl text-slate-200 transition-all hover:scale-125"><i class="fa-solid fa-star"></i></button>
+            </div>
+
+            <button onclick="submitFeedback(this)" class="w-full bg-navy text-white font-bold py-4 rounded-2xl active:scale-95 transition-all shadow-lg shadow-navy/20">
+                Submit Feedback
+            </button>
+        </div>
+
+    </main>
+
+    <!-- ================= 5. FLOATING SCAN BUTTON (SAFFRON THEME) ================= -->
+    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-md px-6 z-[60]">
+        <button onclick="startScanner()" class="w-full h-16 bg-gradient-to-r from-saffron to-orange-500 text-white rounded-[2rem] shadow-[0_15px_40px_rgba(255,153,51,0.4)] flex items-center justify-center gap-4 active:scale-95 transition-all border-t border-white/30 group">
+            <div class="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-qrcode text-lg"></i>
+            </div>
+            <span class="font-extrabold tracking-tight">Scan New Receipt</span>
+        </button>
+    </div>
+
+    <!-- ================= 6. GLASS SCANNER MODAL ================= -->
+    <div id="scanner-container" class="fixed inset-0 z-[100] hidden items-center justify-center p-6 scanner-glass">
+        <!-- Close Button -->
+        <button onclick="stopScanner()" class="absolute top-10 right-8 z-[110] w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center text-navy active:scale-90 transition-all">
+            <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+
+        <div class="w-full max-w-sm bg-white/80 rounded-[3rem] overflow-hidden shadow-2xl border border-white relative">
+            <div class="p-8 text-center">
+                <h3 class="text-xl font-black text-navy leading-none">Saarthi Lens</h3>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Align Receipt in Frame</p>
+            </div>
+
+            <div class="relative w-full aspect-square bg-black overflow-hidden">
+                <div class="laser-line"></div>
+                <!-- Scanner Brackets -->
+                <div class="absolute inset-8 border-2 border-white/20 rounded-[2rem] z-10"></div>
+                <div id="reader" class="w-full h-full"></div>
+            </div>
+
+            <div class="p-8 flex flex-col gap-3">
+                <button onclick="document.getElementById('gallery-input').click()" class="w-full py-4 bg-navy text-white font-bold rounded-2xl flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-image"></i> Gallery Upload
+                </button>
+                <input type="file" id="gallery-input" accept="image/*" class="hidden">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let html5QrCode;
+
+        function nudgeOfficer(btn) {
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Sent';
+            btn.classList.replace('bg-navy', 'bg-green');
+            setTimeout(() => alert("A reminder has been sent to Rajesh Kumar."), 300);
+        }
+
+        // Star Rating Logic
+        function rate(count) {
+            const buttons = document.getElementById('stars').querySelectorAll('button');
+            buttons.forEach((btn, index) => {
+                btn.style.color = index < count ? '#FF9933' : '#E2E8F0';
+            });
+        }
+
+        function submitFeedback(btn) {
+            btn.innerHTML = 'Thank You! ✅';
+            btn.classList.replace('bg-navy', 'bg-green');
+        }
+
+        // Scanner Logic
+        async function startScanner() {
+            document.getElementById('scanner-container').style.display = 'flex';
+            html5QrCode = new Html5Qrcode("reader");
+            
+            const config = { fps: 20, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
+
+            try {
+                await html5QrCode.start(
+                    { facingMode: "environment" }, 
+                    config, 
+                    (decodedText) => {
+                        stopScanner();
+                        alert("Application Found: " + decodedText);
+                        // window.location.href = 'track.html?id=' + decodedText;
+                    }
+                );
+            } catch (err) {
+                console.error("Camera denied", err);
+                stopScanner();
+            }
+        }
+
+        function stopScanner() {
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().then(() => {
+                    document.getElementById('scanner-container').style.display = 'none';
+                });
+            } else {
+                document.getElementById('scanner-container').style.display = 'none';
+            }
+        }
+
+        // Gallery Scan Logic
+        document.getElementById('gallery-input').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const tempScanner = new Html5Qrcode("reader");
+            try {
+                const decodedText = await tempScanner.scanFile(file, true);
+                stopScanner();
+                alert("Receipt Found: " + decodedText);
+            } catch (err) {
+                alert("No valid QR code detected in this image.");
+            }
+        });
+    </script>
+</body>
+</html>

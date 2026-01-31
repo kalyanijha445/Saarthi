@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saarthi | Smart Governance Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* New Gradient Palettes */
+            --citizen-grad: linear-gradient(135deg, #138808 0%, #2ecc71 100%);
+            --gov-grad: linear-gradient(135deg, #FF9933 0%, #f39c12 100%);
+            --navy-grad: linear-gradient(135deg, #000080 0%, #003366 100%);
+            
+            --white: #f8fafc;
+            --navy: #000080;
+            --glass: rgba(255, 255, 255, 0.9);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- 1. MULTILINGUAL PRE-LOADER --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .loader-content {
+            text-align: center;
+            animation: scaleInOut 2.5s infinite ease-in-out;
+        }
+
+        .loader-logo {
+            width: 140px;
+            margin-bottom: 20px;
+        }
+
+        #multilingual-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: var(--navy-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            min-height: 60px;
+        }
+
+        @keyframes scaleInOut {
+            0% { transform: scale(0.9); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        /* --- 2. MAIN LOGIN UI --- */
+        .login-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 153, 51, 0.15), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(19, 136, 8, 0.15), transparent 40%);
+            z-index: -1;
+        }
+
+        .login-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            width: 100%;
+            max-width: 440px;
+            padding: 45px;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            text-align: center;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .login-card.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .saarthi-logo-main {
+            width: 90px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+        }
+
+        h2 { color: var(--navy); margin-bottom: 10px; font-weight: 800; font-size: 1.8rem; }
+        p.subtitle { color: #64748b; font-size: 0.95rem; margin-bottom: 35px; }
+
+        /* --- 3. DYNAMIC GRADIENT SLIDER --- */
+        .role-selector {
+            display: flex;
+            background: #eef2f6;
+            border-radius: 18px;
+            padding: 6px;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            background: none;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #94a3b8;
+            z-index: 1;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-btn.active { color: white; }
+
+        #btn-active {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: calc(50% - 6px);
+            height: calc(100% - 12px);
+            background: var(--citizen-grad); /* Green Gradient */
+            border-radius: 14px;
+            transition: var(--transition);
+            box-shadow: 0 8px 15px rgba(19, 136, 8, 0.25);
+        }
+
+        /* --- 4. FORM FIELDS --- */
+        .form-group { text-align: left; margin-bottom: 22px; }
+        label { font-size: 0.9rem; font-weight: 700; color: #334155; margin-bottom: 8px; display: block; margin-left: 5px; }
+
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-wrapper i { position: absolute; left: 18px; color: #94a3b8; font-size: 1.1rem; }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 16px 16px 52px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 1rem;
+            background: #fbfcfd;
+            transition: var(--transition);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #2ecc71;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.15);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 18px;
+            left: auto !important;
+            cursor: pointer;
+            color: #94a3b8 !important;
+        }
+
+        #gov-options {
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+            opacity: 0;
+        }
+
+        .gov-mode #gov-options {
+            max-height: 120px;
+            opacity: 1;
+            margin-bottom: 22px;
+        }
+
+        /* --- 5. GRADIENT SUBMIT BUTTON --- */
+        #submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--citizen-grad);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 15px;
+            box-shadow: 0 12px 24px rgba(19, 136, 8, 0.2);
+        }
+
+        #submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 30px rgba(19, 136, 8, 0.3);
+            filter: brightness(1.1);
+        }
+
+        /* --- GOV MODE THEME SHIFT --- */
+        .gov-mode #btn-active { 
+            left: calc(50% - 0px); 
+            background: var(--gov-grad); 
+            box-shadow: 0 8px 15px rgba(243, 156, 18, 0.25); 
+        }
+
+        .gov-mode .input-field:focus {
+            border-color: #f39c12;
+            box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.15);
+        }
+
+        .gov-mode #submit-btn {
+            background: var(--gov-grad);
+            box-shadow: 0 12px 24px rgba(243, 156, 18, 0.2);
+        }
+
+        .footer { margin-top: 35px; font-size: 0.9rem; color: #64748b; }
+        .footer a { color: #138808; text-decoration: none; font-weight: 700; transition: 0.3s; }
+        .gov-mode .footer a { color: #FF9933; }
+
+    </style>
+</head>
+<body>
+
+    <!-- 1. Multilingual Loader Overlay -->
+    <div id="preloader">
+        <div class="loader-content">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Saarthi" class="loader-logo">
+            <h1 id="multilingual-text">Saarthi</h1>
+        </div>
+    </div>
+
+    <div class="login-bg"></div>
+
+   <!-- 2. Main Login Card -->
+<div class="login-card" id="loginCard">
+    
+    <!-- ADDED: Flash Messages for Error Display -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash-error" style="color: #e74c3c; background: #fdeaea; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; font-weight: 600; border: 1px solid #fadbd8;">
+            <i class="fa-solid fa-circle-exclamation"></i> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <img src="{{ url_for('static', filename='logo1.png') }}" alt="Logo" class="saarthi-logo-main">
+    <h2 id="welcome-title">Welcome Back</h2>
+    <p class="subtitle">Your AI Companion for Delhi Governance</p>
+
+    <!-- Role Toggle Slider -->
+    <div class="role-selector">
+        <div id="btn-active"></div>
+        <button type="button" class="toggle-btn active" id="user-tab" onclick="switchRole('user')">Citizen</button>
+        <button type="button" class="toggle-btn" id="gov-tab" onclick="switchRole('gov')">Government</button>
+    </div>
+
+    <form action="/login" method="POST" id="login-form">
+        <!-- CRITICAL: Role input for app.py -->
+        <input type="hidden" name="role" id="role-input" value="user">
+
+        <!-- Department Dropdown (Visible only for Gov) -->
+        <div id="gov-options">
+            <label>Department</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-building-shield"></i>
+                <!-- Added ID to handle 'required' via JS -->
+                <select name="department" id="dept-select" class="input-field">
+                    <option value="">Select Department</option>
+                    <option value="minister">Ministerial Office</option>
+                    <option value="pwd">PWD / CPWD</option>
+                    <option value="police">Delhi Police</option>
+                    <option value="mcd">MCD Official</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label id="id-label">Mobile Number / Email</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-id-card-clip" id="id-icon"></i>
+                <!-- name="username" matches app.py -->
+                <input type="text" name="username" class="input-field" placeholder="Enter credentials" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Secure Password</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-fingerprint"></i>
+                <!-- name="password" matches app.py -->
+                <input type="password" name="password" id="password" class="input-field" placeholder="••••••••" required>
+                <i class="fa-solid fa-eye toggle-password" id="eye-icon" onclick="togglePasswordVisibility()"></i>
+            </div>
+        </div>
+
+        <button type="submit" id="submit-btn">Continue to Saarthi</button>
+    </form>
+
+    <div class="footer">
+        Trouble with login? <a href="{{ url_for('signup') }}">Sign up</a>
+    </div>
+</div>
+
+<script>
+    // --- Multilingual Cycle ---
+    const words = ["Saarthi", "सारथी", "સારથી","ਸਾਰਥੀ", "சாரதி", "సారథి", "സാരഥി", "সারথী" , "سارتھی"];
+    let wordIndex = 0;
+    const textElement = document.getElementById("multilingual-text");
+
+    const wordInterval = setInterval(() => {
+        if(textElement) {
+            wordIndex = (wordIndex + 1) % words.length;
+            textElement.style.opacity = 0;
+            setTimeout(() => {
+                textElement.innerText = words[wordIndex];
+                textElement.style.opacity = 1;
+            }, 200);
+        }
+    }, 500);
+
+    // --- Loader Logic ---
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            clearInterval(wordInterval);
+            const preloader = document.getElementById('preloader');
+            if(preloader) preloader.style.transform = 'translateY(-100%)';
+            setTimeout(() => {
+                document.getElementById('loginCard').classList.add('active');
+            }, 400);
+        }, 2500);
+    });
+
+    // --- Role Switcher Logic ---
+    function switchRole(role) {
+        const card = document.getElementById('loginCard');
+        const roleInput = document.getElementById('role-input');
+        const userTab = document.getElementById('user-tab');
+        const govTab = document.getElementById('gov-tab');
+        const idLabel = document.getElementById('id-label');
+        const idIcon = document.getElementById('id-icon');
+        const title = document.getElementById('welcome-title');
+        const deptSelect = document.getElementById('dept-select');
+
+        if (role === 'gov') {
+            card.classList.add('gov-mode');
+            roleInput.value = 'gov';
+            govTab.classList.add('active');
+            userTab.classList.remove('active');
+            idLabel.innerText = "Authorized Email / ID";
+            idIcon.className = "fa-solid fa-user-tie";
+            title.innerText = "Official Login";
+            
+            // UPDATED: Make dept required for Gov
+            deptSelect.setAttribute('required', 'required');
+        } else {
+            card.classList.remove('gov-mode');
+            roleInput.value = 'user';
+            userTab.classList.add('active');
+            govTab.classList.remove('active');
+            idLabel.innerText = "Mobile Number / Email";
+            idIcon.className = "fa-solid fa-id-card-clip";
+            title.innerText = "Welcome Back";
+            
+            // UPDATED: Remove required for Citizen
+            deptSelect.removeAttribute('required');
+        }
+    }
+
+    // --- Password Toggle ---
+    function togglePasswordVisibility() {
+        const passInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eye-icon');
+        if (passInput.type === 'password') {
+            passInput.type = 'text';
+            eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            passInput.type = 'password';
+            eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+</script>
+</body>
+</html>
